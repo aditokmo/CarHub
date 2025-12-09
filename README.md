@@ -10,8 +10,6 @@ pass: test123
 email: test@gmail.com </br>
 pass: test123
 
-Live demo: https://carhub-platform.vercel.app
-
 ## Technologies Used
 
 - **Frontend**: React, Typescript, Axios, React Form Hook, Tanstack React Query, SCSS
