@@ -7,6 +7,7 @@ import path from 'path';
 import authRoutes from './routes/authRoutes'
 import userRoutes from './routes/userRoutes'
 import appointmentRoutes from './routes/appointmentRoutes'
+import reviewRoutes from './routes/reviewRoutes'
 
 // Error Controller
 import { errorController } from './controllers/errorController';
@@ -26,6 +27,7 @@ app.use(cookieParser());
 app.use('/api/auth', authRoutes)
 app.use('/api/user', userRoutes)
 app.use('/api/appointment', appointmentRoutes)
+app.use('/api/review', reviewRoutes)
 
 app.use(errorController);
 
