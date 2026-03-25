@@ -12,7 +12,6 @@ export interface UserBase {
         label: string,
         value: string
     },
-    appointments: mongoose.Types.ObjectId[],
     confirmToken?: string,
     confirmed: boolean,
 }
@@ -28,7 +27,6 @@ export interface UserResponse extends UserBase {
         work: Work[],
         group: string[],
         experience: number,
-        membership: number,
         description: string,
         numberOfWorkers: number,
         numberOfServiceBays: number,
@@ -43,7 +41,6 @@ export interface UserRequest extends UserBase {
     work: string,
     group: string[],
     experience: number,
-    membership: number,
     description: string,
     numberOfWorkers: number,
     numberOfServiceBays: number,

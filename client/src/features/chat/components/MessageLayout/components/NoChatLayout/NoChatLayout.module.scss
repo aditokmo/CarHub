@@ -1,0 +1,22 @@
+@import '../../../../../../styles/mixin.scss';
+
+.emptyLayout {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+
+    @include custom-responsive('850px') {
+        display: none;
+    }
+
+    img.image {
+        width: 20rem;
+    }
+
+    h3 {
+        color: #000b19;
+    }
+}

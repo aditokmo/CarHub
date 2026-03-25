@@ -1,3 +1,4 @@
+@import '../styles/mixin.scss';
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 *,
@@ -23,6 +24,7 @@ body {
     font-weight: 500;
     background-color: #fff;
     line-height: 150%;
+    overflow-x: hidden;
 }
 
 .container {
@@ -36,28 +38,17 @@ button {
     border: 0;
 }
 
-::-webkit-scrollbar {
-    width: 10px;
-    height: 3px;
-    border-radius: 1rem;
+.loading_spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    right: 50%;
+    transform: translateX(-2rem);
 }
 
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #ddd;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: green;
-}
-
-.react-calendar__tile--active {
-    background-color: green !important;
-    border-radius: 5px;
-    font-weight: bold !important;
+    background-color: #f1f1f1;
+    border-radius: 10px;
 }
 
 .react-calendar__navigation__label {

@@ -1,30 +1,29 @@
-import { MdLocationOn } from 'react-icons/md';
-import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdLocationOn } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { IoMdStar } from 'react-icons/io';
 import NoImage from '../../assets/no-image.jpg';
-import { User, UserResponse } from '../../features/auth/types/authTypes';
+import { UserResponse } from '../../features/auth/types';
 import styles from './Card.module.scss';
+import { useState } from 'react';
 
 interface PropTypes {
-    toggleArchive: (user: User) => void,
-    archive: User[],
     user: UserResponse
 }
 
-export default function Card({ toggleArchive, archive, user }: PropTypes) {
-    console.log(user)
+export default function Card({ user }: PropTypes) {
+    const [currentPost, setCurrentPost] = useState(0);
+
+    console.log(user.serviceProviderDetails.work)
+
+    console.log(currentPost)
 
     return (
         <div className={styles.card} key={user.email}>
-            {!archive.some(({ name }: { name: string }) => name === user.name) ? (
-                <button className={styles.save} onClick={() => toggleArchive(user)}>
-                    <FaRegHeart />
-                </button>
-            ) : (
-                <button className={styles.save} onClick={() => toggleArchive(user)}>
-                    <FaHeart />
-                </button>
+            {user.serviceProviderDetails.work.length > 1 && (
+                <div className={styles.arrows}>
+                    <button className={styles.arrow} onClick={() => setCurrentPost(currentPost === 0 ? user.serviceProviderDetails.work.length - 1 : currentPost - 1)}><MdKeyboardArrowLeft /></button>
+                    <button className={styles.arrow} onClick={() => setCurrentPost(currentPost === user.serviceProviderDetails.work.length - 1 ? 0 : currentPost + 1)}><MdKeyboardArrowRight /></button>
+                </div>
             )}
             <div className={styles.slider}>
                 {user.serviceProviderDetails.work.length === 0 ? (
@@ -34,14 +33,12 @@ export default function Card({ toggleArchive, archive, user }: PropTypes) {
                         className={styles.workImage}
                     />
                 ) : (
-                    user.serviceProviderDetails.work.map(({ images, workTitle }) => (
-                        <img
-                            key={workTitle}
-                            src={images[0]}
-                            alt={user.name}
-                            className={styles.workImage}
-                        />
-                    ))
+                    <img
+                        key={user.serviceProviderDetails.work[currentPost].workTitle}
+                        src={user.serviceProviderDetails.work[currentPost].images[0]}
+                        alt={user.name}
+                        className={styles.workImage}
+                    />
                 )}
             </div>
 

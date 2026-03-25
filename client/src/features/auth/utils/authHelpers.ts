@@ -1,4 +1,43 @@
-import { User, Work } from "../types/authTypes";
+import { RegisterRequest, User, Work } from "../types";
+
+export const buildFormData = (credentials: RegisterRequest) => {
+    const formData = new FormData();
+
+    console.log(credentials)
+
+    if (credentials.profileImage) {
+        formData.append('profileImage', credentials.profileImage);
+    }
+
+    if (credentials.work && Array.isArray(credentials.work)) {
+        const workData = credentials.work.map((work: Work) => {
+            const workItem: Work = {
+                workTitle: work.workTitle,
+                workDescription: work.workDescription,
+                images: []
+            };
+
+            if (Array.isArray(work.images)) {
+                work.images.forEach((image: string) => {
+                    formData.append('images', image);
+                    workItem.images.push(image);
+                });
+            }
+
+            return workItem;
+        });
+
+        formData.append('work', JSON.stringify(workData));
+    }
+
+    Object.entries(credentials).forEach(([key, value]) => {
+        if (key !== 'profileImage' && key !== 'work') {
+            formData.append(key, value);
+        }
+    });
+
+    return formData;
+}
 
 export const formatUserData = (data: User) => {
     const { name, email, password, profileImage, role, phoneNumber, location, group, experience, description, numberOfWorkers, numberOfServiceBays, work } = data;
@@ -19,8 +58,6 @@ export const formatUserData = (data: User) => {
         description,
         numberOfWorkers,
         numberOfServiceBays,
-        appointments: [],
-        membership: 0,
         rating: {
             average: 0,
             count: 0,
@@ -44,8 +81,6 @@ export const formatUserData = (data: User) => {
             ...serviceProviderDetails
         };
     }
-
-    console.log(commonData)
 
     return commonData;
 };

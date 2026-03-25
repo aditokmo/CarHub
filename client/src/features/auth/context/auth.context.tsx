@@ -1,29 +1,12 @@
-import { createContext, useContext, useReducer, Dispatch } from 'react';
-
-interface reducerStateType {
-    currentUser: string | null;
-    userRole: string;
-};
-
-type reducerActionType =
-    | { type: 'SET_CURRENT_USER'; payload: string }
-    | { type: 'SET_USER_ROLE'; payload: string }
-    | { type: 'RESET_AUTH' };
-
-interface AuthContextType {
-    state: reducerStateType;
-    dispatch: Dispatch<reducerActionType>;
-};
-
-interface ContextPropsType {
-    children: React.ReactNode;
-};
+import { createContext, useContext, useReducer } from 'react';
+import { AuthContextType, ContextPropsType, reducerActionType, reducerStateType } from '../types';
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 const initialState: reducerStateType = {
     currentUser: null,
     userRole: '',
+    userId: '',
 };
 
 function reducer(state: reducerStateType, action: reducerActionType): reducerStateType {
@@ -32,6 +15,8 @@ function reducer(state: reducerStateType, action: reducerActionType): reducerSta
             return { ...state, currentUser: action.payload };
         case 'SET_USER_ROLE':
             return { ...state, userRole: action.payload };
+        case 'SET_USER_ID':
+            return { ...state, userId: action.payload };
         case 'RESET_AUTH':
             return initialState;
         default:
@@ -43,8 +28,8 @@ export function AuthContextProvider({ children }: ContextPropsType) {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     return (
-        <AuthContext.Provider value= {{ state, dispatch }}>
-            { children }
+        <AuthContext.Provider value={{ state, dispatch }}>
+            {children}
         </AuthContext.Provider>
     );
 }

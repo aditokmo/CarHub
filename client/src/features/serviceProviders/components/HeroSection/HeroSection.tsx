@@ -1,15 +1,21 @@
 import { Link } from 'react-router-dom';
-import styles from './HeroSection.module.scss';
-import SearchProviders from '../../../../components/Navbar/components/SearchProviders/SearchProviders';
 import { Typewriter } from 'react-simple-typewriter';
 import { IoMdStar } from 'react-icons/io';
 import { HiWrenchScrewdriver } from 'react-icons/hi2';
 import { PiUsersThreeFill } from 'react-icons/pi';
-import { ImCheckboxChecked } from 'react-icons/im';
 import OldManImage from '../../../../assets/hero-section-img-1.webp'
 import YoungManImage from '../../../../assets/hero-section-img-2.webp'
+import { useForm } from 'react-hook-form';
+import SearchProviders from '../SearchProviders/SearchProviders';
+import styles from './HeroSection.module.scss';
 
 export default function HeroSection() {
+    const { handleSubmit, control } = useForm({
+        defaultValues: {
+            search: ''
+        }
+    })
+
     return (
         <header className={styles.hero}>
             <div className='container'>
@@ -17,7 +23,7 @@ export default function HeroSection() {
                     <div className={styles.col}>
                         <h1>Your partner in finding <br />
                             <Typewriter
-                                words={['Mechanic', 'Electrician', 'Detailer', 'Body Specialist', 'AC Technician', 'Road Rescue', 'Tires']}
+                                words={['Mechanic', 'Electrician', 'Detailer', 'Body', 'AC', 'Road Rescue', 'Tires']}
                                 loop={true}
                                 cursor
                                 cursorStyle='_'
@@ -30,7 +36,10 @@ export default function HeroSection() {
                             <li className={styles.active}>Hire A Pro</li>
                             <li><Link to='/auth/register'>Find customers</Link></li>
                         </ul>
-                        <SearchProviders />
+                        <SearchProviders
+                            handleSubmit={handleSubmit}
+                            control={control}
+                        />
                         <div className={styles.msg}>
                             <div className={styles.dot}></div>
                             <div className={styles.dot}></div>
@@ -39,8 +48,8 @@ export default function HeroSection() {
                         </div>
                     </div>
                     <div className={styles.col}>
-                        <img src={OldManImage} alt=""  className={styles.heroSectionImage}/>
-                        <img src={YoungManImage} alt=""  className={styles.heroSectionImage}/>
+                        <img src={OldManImage} alt="" className={styles.heroSectionImage} />
+                        <img src={YoungManImage} alt="" className={styles.heroSectionImage} />
                     </div>
                 </div>
             </div>
@@ -61,10 +70,6 @@ export default function HeroSection() {
                         <div className={styles.customers}>
                             <PiUsersThreeFill />
                             <span>8.474</span> Customers
-                        </div>
-                        <div className={styles.appointments}>
-                            <ImCheckboxChecked />
-                            <span>8.474</span> Appointments
                         </div>
                     </div>
                 </div>

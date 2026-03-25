@@ -1,17 +1,17 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, UseMutationResult, useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { createAccount, login, logout } from "../services/authServices";
+import { createAccount, disconnectSocket, getCurrentUser, login, logout } from "../services/authServices";
 import { useNavigate } from "react-router";
 import { useAuthContext } from "../../context/auth.context";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
-import { User } from "../../types/authTypes";
+import { LoginRequest, LoginResponse, LogoutResponse, RegisterRequest, RegisterResponse } from "../../types";
 
-export function useCreateAccount(reset: () => void) {
+export function useCreateAccount(reset: () => void): UseMutationResult<RegisterResponse, Error, RegisterRequest, unknown> {
     const navigate = useNavigate();
     const mutation = useMutation({
         mutationKey: ['register'],
-        mutationFn: (data: User) => createAccount(data),
-        onSuccess: (res) => {
+        mutationFn: (data: RegisterRequest) => createAccount(data),
+        onSuccess: (res: RegisterResponse) => {
             if (res.status === 'success') {
                 navigate('/auth/verify')
                 reset();
@@ -30,16 +30,14 @@ export function useCreateAccount(reset: () => void) {
     return mutation;
 }
 
-export function useLogin() {
+export function useLogin(): UseMutationResult<LoginResponse, Error, LoginRequest, unknown> {
     const navigate = useNavigate();
     const { dispatch } = useAuthContext();
 
     const mutation = useMutation({
         mutationKey: ['login'],
-        mutationFn: (data: User) => login(data),
-        onSuccess: (res) => {
-            console.log(res);
-
+        mutationFn: (data: LoginRequest) => login(data),
+        onSuccess: (res: LoginResponse) => {
             if (res?.response?.data?.status === 'error') {
                 toast.error(res?.response?.data?.message)
                 return;
@@ -47,10 +45,9 @@ export function useLogin() {
 
             dispatch({ type: 'SET_CURRENT_USER', payload: res.accessToken });
             dispatch({ type: 'SET_USER_ROLE', payload: res.role });
+            dispatch({ type: 'SET_USER_ID', payload: res.userId });
 
             navigate('/');
-
-            toast.success('Login successful!');
         },
         onError: (err: Error) => {
             console.log(`Login error: ${err}`);
@@ -61,7 +58,17 @@ export function useLogin() {
     return mutation;
 }
 
-export function useLogout() {
+export function useCurrentUser(token: string | null) {
+    const query = useQuery({
+        queryKey: ['currentUser', token],
+        queryFn: () => getCurrentUser(token),
+        enabled: !!token
+    });
+
+    return query;
+}
+
+export function useLogout(): UseMutationResult<LogoutResponse, Error, void> {
     const axiosPrivate = useAxiosPrivate();
     const { dispatch } = useAuthContext();
     const mutation = useMutation({
@@ -69,6 +76,7 @@ export function useLogout() {
         mutationKey: ["logout"],
         onSuccess: () => {
             dispatch({ type: 'RESET_AUTH' });
+            disconnectSocket();
         },
         onError: (err) => {
             console.log(err)

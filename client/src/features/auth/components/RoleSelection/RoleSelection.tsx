@@ -2,19 +2,14 @@ import { Link } from "react-router-dom";
 import Button from "../../../../components/Button/Button";
 import { FaCheckCircle, FaRegUserCircle } from "react-icons/fa";
 import { GiHomeGarage } from "react-icons/gi";
-import { Control, Controller, FieldErrors, FieldValues, UseFormHandleSubmit, UseFormWatch } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import GroupSelection from "../GroupSelection/GroupSelection";
+import { RoleSelectionProps } from "../../types";
 import styles from './RoleSelection.module.scss';
 
-interface PropTypes {
-    setActiveTab: (val: number) => void;
-    errors: FieldErrors<FieldValues>;
-    control: Control<FieldValues>;
-    watch: UseFormWatch<FieldValues>;
-    handleSubmit: UseFormHandleSubmit<FieldValues>
-}
+export default function RoleSelection({ setActiveTab }: RoleSelectionProps) {
+    const { handleSubmit, control, watch, formState: { errors } } = useFormContext();
 
-export default function RoleSelection({ setActiveTab, errors, watch, control, handleSubmit }: PropTypes) {
     return (
         <div className={styles.selectionLayout}>
             <h2 className={styles.registerTitle}>Welcome to <span className={styles.titleSpan}>CarHub</span></h2>
@@ -87,7 +82,7 @@ export default function RoleSelection({ setActiveTab, errors, watch, control, ha
             )}
 
             <Button type="button" onClick={handleSubmit(() => setActiveTab(1))}>Next</Button>
-            
+
             {errors.role && <p className={styles.errorMessage}>{errors.role.message as string}</p>}
             {errors.group && <p className={styles.errorMessage}>{errors.group.message as string}</p>}
 

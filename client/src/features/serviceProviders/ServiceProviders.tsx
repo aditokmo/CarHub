@@ -1,19 +1,33 @@
-import { useState } from 'react';
-import { useGetUsers } from './api/hooks/useServiceProviders';
+import { useEffect } from 'react';
 import FilterProviders from './components/FilterProviders/FilterProviders';
 import Providers from './components/Providers/Providers';
 import HeroSection from './components/HeroSection/HeroSection';
+import { useGetUsers } from './hooks/useServiceProviders';
+import { useFilters } from '../../hooks/useFilter';
+import { useInView } from 'react-intersection-observer';
 import styles from './ServiceProviders.module.scss';
 
 export default function ServiceProviders() {
-    const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
-    const { data: users } = useGetUsers({ type: 'serviceProvider', groups: selectedGroups });
+    const { filters } = useFilters();
+    const { data: providers, status, fetchNextPage } = useGetUsers({ type: 'serviceProvider', search: filters?.search, ...filters });
+
+    const { ref, inView } = useInView();
+
+    useEffect(() => {
+        if (inView) {
+            fetchNextPage();
+        }
+    }, [inView, fetchNextPage]);
 
     return (
         <div className={styles.layout}>
             <HeroSection />
-            <FilterProviders setSelectedGroups={setSelectedGroups} selectedGroups={selectedGroups} />
-            <Providers data={users} />
+            <FilterProviders />
+            <Providers
+                data={providers}
+                status={status}
+            />
+            <div ref={ref}></div>
         </div>
     );
 }

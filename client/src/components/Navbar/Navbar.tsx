@@ -1,12 +1,13 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuthContext } from '../../features/auth/context/auth.context';
-import { FaUserCircle } from 'react-icons/fa';
+import { FaTimes, FaUserCircle } from 'react-icons/fa';
 import { IoIosArrowDown } from 'react-icons/io';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { GrLanguage } from 'react-icons/gr';
 import useToggle from '../../hooks/useToggle';
-import { useLogout } from '../../features/auth/api/hooks/useAuth';
-import { useCurrentUser } from '../../features/serviceProviders/api/hooks/useCurrentUser';
+import { useCurrentUser, useLogout } from '../../features/auth/api/hooks/useAuth';
+import ReactLoading from 'react-loading';
+import NoProfileImage from '../../assets/no-user-image.png'
 import styles from './Navbar.module.scss';
 
 export default function Navbar() {
@@ -15,8 +16,9 @@ export default function Navbar() {
     const params = useParams()
     const { mutate: logout } = useLogout();
     const { data, isLoading: isLoadingUser } = useCurrentUser(state.currentUser);
+    const navigate = useNavigate();
 
-    if (isLoadingUser) return <h2>Loading...</h2>
+    if (isLoadingUser) return <ReactLoading type={'spin'} color={'green'} height={'5rem'} width={'5rem'} className='loading_spinner' />
 
     return (
         <nav className={styles.nav} style={
@@ -28,11 +30,20 @@ export default function Navbar() {
                 <div className={styles.navSection}>
                     <div className={styles.leftSection}>
                         <h3 className={styles.title}>Car<span>Hub</span></h3>
-                        <ul>
+                        <ul className={styles.desktopNav}>
                             <li><Link to='/'>Home</Link></li>
                             <li><Link to='/'>Car Shops <IoIosArrowDown /></Link></li>
                             <li><Link to='/'>Average Prices <IoIosArrowDown /></Link></li>
                             <li><Link to='/'>More <IoIosArrowDown /></Link></li>
+                        </ul>
+                        <button className={styles.mobileMenu}><RxHamburgerMenu /></button>
+                        <ul className={styles.mobileNav}>
+                            <button><FaTimes /></button>
+                            <li><Link to='/'>Home</Link></li>
+                            <li><Link to='/'>Car Shops <IoIosArrowDown /></Link></li>
+                            <li><Link to='/'>Average Prices <IoIosArrowDown /></Link></li>
+                            <li><Link to='/'>More <IoIosArrowDown /></Link></li>
+                            <li><Link to='/forum'>Forum</Link></li>
                         </ul>
                     </div>
 
@@ -41,22 +52,24 @@ export default function Navbar() {
                             <li><GrLanguage /></li>
                             <li onClick={() => toggle('navbarDropdownModal')} className={isActive.navbarDropdownModal ? styles.active : undefined}>
                                 <RxHamburgerMenu />
-                                {state.currentUser ? <img src={data?.user?.profileImage} alt="" className={styles.profileImage} /> : <FaUserCircle />}
+                                {state.currentUser ? <img src={data?.user?.profileImage ? data?.user?.profileImage : NoProfileImage} alt="" className={styles.profileImage} /> : <FaUserCircle />}
                             </li>
                         </ul>
 
                         {state.currentUser ? (
                             <ul className={`${styles.dropdownList} ${styles.loggedList} ${isActive.navbarDropdownModal ? styles.active : ''}`}>
-                                <li><Link to='/profile'>Messages</Link></li>
-                                <li><Link to='/notifications'>Notifications</Link></li>
-                                <li><Link to='/saved-providers'>Saved Providers <span className={styles.notificationCount}>(0)</span></Link></li>
-                                <li><Link to='/profile'>Account</Link></li>
+                                <li><Link to='/messages' onClick={() => toggle('navbarDropdownModal')}>Messages</Link></li>
+                                <li><Link to='/notifications' onClick={() => toggle('navbarDropdownModal')}>Notifications</Link></li>
+                                <li><Link to='/saved-providers' onClick={() => toggle('navbarDropdownModal')}>Saved Providers <span className={styles.notificationCount}>(0)</span></Link></li>
+                                <li><Link to={`/serviceProvider/${data?.user?.name}`} onClick={() => toggle('navbarDropdownModal')}>Account</Link></li>
                                 <li><Link to='/help-center'>Help Center</Link></li>
                                 <li><Link to='/help-center'>Upgrade to Pro <span className={styles.proTag}>PRO</span></Link></li>
                                 <li>
                                     <Link to='/' onClick={(e) => {
                                         e.preventDefault();
                                         logout();
+                                        toggle('navbarDropdownModal');
+                                        navigate('/')
                                     }}>Log out</Link>
                                 </li>
                             </ul>

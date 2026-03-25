@@ -1,30 +1,18 @@
 import { useState } from 'react';
-import { Control, Controller, FieldErrors, FieldValues, UseFormHandleSubmit } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import Button from '../../../../components/Button/Button';
 import Input from '../../../../components/Input/Input';
 import Select from 'react-select';
 import defaultProfileImage from '../../../../assets/no-user-image.png';
-import { personalDetailsInputFields } from '../../../../lib/InputFields';
+import { personalDetailsInputFields } from '../../../../lib/constants/InputFields';
+import { personalDetailsCustomStyle } from '../../lib';
+import { PersonalDetailsProps } from '../../types';
 import styles from './PersonalDetails.module.scss';
 
-interface PropTypes {
-    control: Control<FieldValues>,
-    errors: FieldErrors<FieldValues>;
-    setActiveTab: (val: number) => void,
-    handleSubmit: UseFormHandleSubmit<FieldValues>,
-    role: 'customer' | 'serviceProvider'
-}
-
-const customStyles = {
-    control: (provided: any) => ({
-        ...provided,
-        fontSize: '13px',
-        padding: '.6rem 0'
-    })
-}
-
-export default function PersonalDetails({ control, errors, setActiveTab, handleSubmit, role }: PropTypes) {
+export default function PersonalDetails({ setActiveTab }: PersonalDetailsProps) {
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
+    const { handleSubmit, control, formState: { errors }, getValues } = useFormContext();
+    const role = getValues('role');
 
     return (
         <div className={styles.form}>
@@ -32,11 +20,10 @@ export default function PersonalDetails({ control, errors, setActiveTab, handleS
 
             {personalDetailsInputFields
                 .filter((inputField) => {
-                    // Hide certain fields if the role is customer
                     if (role === 'customer' && ['experience', 'numberOfWorkers', 'numberOfServiceBays'].includes(inputField.name)) {
-                        return false; // Exclude these fields for customers
+                        return false;
                     }
-                    return true; // Include all other fields
+                    return true;
                 })
                 .map((inputField) => (
                     <div key={inputField.name} className={styles.inputField}>
@@ -77,7 +64,7 @@ export default function PersonalDetails({ control, errors, setActiveTab, handleS
                                             {...field}
                                             options={inputField.options}
                                             styles={{
-                                                ...customStyles,
+                                                ...personalDetailsCustomStyle,
                                                 control: (provided) => ({
                                                     ...provided,
                                                     padding: '0.3rem 0',

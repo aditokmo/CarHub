@@ -1,0 +1,29 @@
+@import '../../../../../../styles/mixin.scss';
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1rem;
+
+    .returnIcon {
+        font-size: 3rem;
+        cursor: pointer;
+        display: none;
+
+        @include custom-responsive('850px') {
+            display: block;
+        }
+    }
+
+    img {
+        width: 4rem;
+        height: 4rem;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    h3 {
+        font-size: 1.4rem;
+    }
+}

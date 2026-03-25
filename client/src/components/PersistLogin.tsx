@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Outlet } from "react-router";
 import { useAuthContext } from "../features/auth/context/auth.context";
 import { refreshToken } from "../features/auth/api/services/authServices";
+import ReactLoading from 'react-loading';
 
 export default function PersistLogin() {
     const [isLoading, setLoading] = useState(true);
@@ -15,6 +16,7 @@ export default function PersistLogin() {
                 const newUserAccess = await refreshToken();
                 dispatch({ type: 'SET_CURRENT_USER', payload: newUserAccess.accessToken });
                 dispatch({ type: 'SET_USER_ROLE', payload: newUserAccess.role });
+                dispatch({ type: 'SET_USER_ID', payload: newUserAccess.userId });
             } catch (error) {
                 console.log(`Token refresh failed: ${error}`);
                 dispatch({ type: 'RESET_AUTH' });
@@ -31,8 +33,8 @@ export default function PersistLogin() {
     }, []);
 
     if (isLoading) {
-        return 'Loading...';
+        return <ReactLoading type={'spin'} color={'green'} height={'5rem'} width={'5rem'} className='loading_spinner' />;
     }
 
-    return <Outlet />; 
+    return <Outlet />;
 }

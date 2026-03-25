@@ -9,7 +9,7 @@ const userSchema = new Schema({
         unique: true,
         required: [true, 'Please provide name'],
         minLength: [2, 'Name must contain at least 2 characters'],
-        maxLength: [40, 'Name cant be higher than 30 characters']
+        maxLength: [40, 'Name cant be higher than 30 characters'],
     },
     email: {
         type: String,
@@ -29,7 +29,8 @@ const userSchema = new Schema({
     role: {
         type: String,
         enum: ['customer', 'serviceProvider'],
-        required: true,
+        required: [true, 'Role is required'],
+        message: 'Invalid role. Allowed values are customer or serviceProvider',
     },
     phoneNumber: {
         type: String,
@@ -37,12 +38,8 @@ const userSchema = new Schema({
     },
     location: {
         type: String,
-        required: [true, 'Please select your location']
+        required: [true, 'Please select your location'],
     },
-    appointments: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Appointment',
-    }],
     confirmed: {
         type: Boolean,
         default: false,
@@ -53,7 +50,7 @@ const userSchema = new Schema({
     serviceProviderDetails: {
         group: {
             type: [String],
-            enum: ['Mehanic', 'Electrician', 'Body specialist', 'Tuning', 'Exhaust', 'Transmission', 'Detailer', 'AC Technician', 'Road Rescue', 'Tires'],
+            enum: ['Mehanic', 'Electrician', 'Body', 'Tuning', 'Exhaust', 'Transmission', 'Detailer', 'AC', 'Road Rescue', 'Tires'],
         },
         experience: {
             type: Number,
@@ -61,10 +58,6 @@ const userSchema = new Schema({
                 return (this as { role: 'serviceProvider' }).role === 'serviceProvider';
             },
             message: 'Please enter your experience',
-        },
-        membership: {
-            type: Number,
-            default: 0
         },
         description: {
             type: String,

@@ -1,64 +1,18 @@
-# Auto Industry Web App ( CarHub )
+# CarHub
 
-Welcome to the CarHub repository! This guide will help you get started with setting up the project and running it on your local machine.
+CarHub connects car owners with service specialists like mechanics, detailers, and electricians, providing a platform to find and compare professionals while helping service providers grow their reputation and reach.
 
-## Getting Started
+The project can only be tested in the local environment because the server is currently down for testing
 
-### Prerequisites
+### Test credentials for customer profile:
+email: user-test@gmail.com </br>
+pass: test123
 
-Make sure you have **Git**, **Node.js**, and **npm** installed on your system.
-
-1. **Clone the repository**:
-
-   ```bash
-   https://github.com/aditokmoo/auto-industry-web-app.git
-
-2. **Navigate to the project folder**:
-   
-   ```bash
-   cd repo-name
-
-3. **Navigate to the client folder and install the dependencies**:
-
-   ```bash
-   cd client
-   npm install
-
-4. **Do the same for the backend folder**:
-
-   ```bash
-   cd backend
-   npm install
-
-5. **Running the project**:
-- Start the client:
-   ```bash
-   cd client
-   npm run dev
-
-- Start the backend:
-   ```bash
-   cd backend
-   npm run dev
-
-The client and backend should now be running locally.
-
-## Screenshots
-Here are some images to showcase the project
-
-1. Login
-![Login](public/images/Login.png)
-
-2. Register
-![Register](public/images/auth.png)
-
-3. Home and details page
-![Home](public/images/app.png)
-
-note: project is in progress...
+### Test credentials for service provider profile:
+email: test@gmail.com </br>
+pass: test123
 
 ## Technologies Used
 
-- **Frontend**: React, Typescript, Axios, React Form Hook, Tanstack React Query, Tanstack React Table, SCSS.
-- **Backend**: Node.js, Express, MongoDB, Typescript, Cloudinary.
-
+- **Frontend**: React, Typescript, Axios, React Form Hook, Tanstack React Query, SCSS
+- **Backend**: Node.js, Express, MongoDB, Typescript, Cloudinary Socket.IO

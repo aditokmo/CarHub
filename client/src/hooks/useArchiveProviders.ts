@@ -1,11 +1,10 @@
-import { User } from "../features/auth/types/authTypes";
+import { User } from "../features/auth/types";
 import useLocalStorage from "./useLocalStorage";
 
 export default function useArchiveProviders() {
     const [archive, setArchive] = useLocalStorage<User[]>('archivedProviders', []);
 
     const toggleArchive = (serviceProviderData: User) => {
-        console.log(serviceProviderData);
 
         const isArchived = archive.some(
             (provider) => provider.name === serviceProviderData.name
